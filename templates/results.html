@@ -1,7 +1,19 @@
-<h1>Artist Name: {{ artist_data["name"] }}</h1>
-<h1>Artist ID: {{ artist_data["id"] }}</h1>
-<h1>Genres: {{ artist_data["genres"] }} </h1>
-<h1>Followers: {{ artist_data["followers"]["total"] }} </h1>
-<h1>Popularity: {{ artist_data["popularity"] }} </h1>
+<h1>Album Name: {{ album["name"] }}</h1>
+<h3>Artist: {{ album["artists"][0]["name"] }}</h3>
+<h3>Release Date: {{ album["release_date"] }}</h3>
+
+
+<h2>Album Stats</h2>
+<p>Genres: {{ genres }}</p>
+<p>Popularity: {{ popularity }} percentile</p>
+<p>Average Danceability: {{ danceability }}%</p>
+<p>Average Energy: {{ energy }}%</p>
+
+
+<h2>You'd Also Like</h2>
+{% for rec in recommendations %}
+    <p>{{ rec["album"]["name"] }} by {{ rec["album"]["artists"][0]["name"] }}</p>
+{% endfor %}
+
 
 <p><a href="/">Back to search</a></p>

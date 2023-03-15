@@ -28,10 +28,25 @@ def homepage():
 def search_results():
     """View search results."""
 
-    search_term = request.form.get("artist")
-    artist_data = search_for_artist(get_token(), search_term)
+    token = get_token()
+    search_term = request.form.get("search_term")
+    album = search_for_album(token, search_term)
+    artist_id = album["artists"][0]["id"]
+    album_id = album["id"]
+    genres = get_artist_from_id(token, artist_id)["genres"]
+    popularity = get_album_from_id(token, album_id)["popularity"]
+    album_tracks = get_album_tracks_from_id(token, album_id)
+    danceability = avg_danceability(album_tracks)
+    energy = avg_energy(album_tracks)
+    recommendations = get_recommendations(token, artist_id, genres)["tracks"]
 
-    return render_template("results.html", artist_data = artist_data)
+    return render_template("results.html", 
+                           album = album, 
+                           genres = genres, 
+                           popularity = popularity,
+                           danceability = danceability,
+                           energy = energy,
+                           recommendations = recommendations)
 
 
 # -------------------------------------------------- FUNCTIONS --------------------------------------------------
@@ -109,6 +124,15 @@ def get_track_from_id(token, track_id):
     return json_results
 
 
+def get_recommendations(token, artist_id, genres):
+    url = f"https://api.spotify.com/v1/recommendations?limit=5&seed_artists={artist_id}&seed_genres={genres}&max_popularity=50"
+    headers = get_auth_header(token)
+    result = get(url, headers = headers)
+    json_results = json.loads(result.content)
+
+    return json_results
+
+
 def avg_energy(tracks):
     vals = []
 
@@ -146,7 +170,14 @@ def avg_danceability(tracks):
 # album_tracks = get_album_tracks_from_id(get_token(), album_id)
 
 
-# print(avg_danceability(album_tracks))
+# recommendations = get_recommendations(get_token(), artist_id, artist_genres)["tracks"]
+
+# print(recommendations[0])
+
+# for track in recommendations:
+#     print(track["album"]["name"],"by", track["album"]["artists"][0]["name"])
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
