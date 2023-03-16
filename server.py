@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, session, redirect
+from flask import Flask, render_template, request
 from dotenv import load_dotenv
 from jinja2 import StrictUndefined
 import os
@@ -33,12 +33,14 @@ def search_results():
     album = search_for_album(token, search_term)
     artist_id = album["artists"][0]["id"]
     album_id = album["id"]
-    genres = get_artist_from_id(token, artist_id)["genres"]
+    genres = format_genres(get_artist_from_id(token, artist_id)["genres"])
     popularity = get_album_from_id(token, album_id)["popularity"]
     album_tracks = get_album_tracks_from_id(token, album_id)
     danceability = avg_danceability(album_tracks)
     energy = avg_energy(album_tracks)
     recommendations = get_recommendations(token, artist_id, genres)["tracks"]
+    release_date = format_date(album["release_date"])
+    cover_art = album["images"][1]["url"]
 
     return render_template("results.html", 
                            album = album, 
@@ -46,7 +48,9 @@ def search_results():
                            popularity = popularity,
                            danceability = danceability,
                            energy = energy,
-                           recommendations = recommendations)
+                           recommendations = recommendations,
+                           release_date = release_date,
+                           cover_art = cover_art)
 
 
 # -------------------------------------------------- FUNCTIONS --------------------------------------------------
@@ -134,6 +138,7 @@ def get_recommendations(token, artist_id, genres):
 
 
 def avg_energy(tracks):
+    """Calculates avg score across all tracks."""
     vals = []
 
     for track in tracks:
@@ -146,6 +151,7 @@ def avg_energy(tracks):
 
 
 def avg_danceability(tracks):
+    """Calculates avg score across all tracks."""
     vals = []
 
     for track in tracks:
@@ -155,6 +161,29 @@ def avg_danceability(tracks):
     avg = sum(vals) / len(vals)
 
     return round(avg * 100)
+
+
+def format_date(date):
+    """Reformats date pulled from data."""
+    split_date = date.split("-")
+    new = []
+    for item in split_date:
+        new.append(item.lstrip("0"))
+    year = new.pop(0)
+    new.append(year)
+    reordered_date = "/".join(new)
+
+    return reordered_date
+
+
+def format_genres(genres):
+    """Reformats genres from list into tidy string."""
+    new = []
+    for genre in genres:
+        new.append(genre.capitalize())
+    final_string = ", ".join(new)
+
+    return final_string
 
 
 # -------------------------------------------------- TESTING/PRINTING --------------------------------------------------
@@ -168,16 +197,12 @@ def avg_danceability(tracks):
 # album_popularity = get_album_from_id(get_token(), album_id)["popularity"]
 # album_genres = get_album_from_id(get_token(), album_id)["genres"] #albums always come up with an empty genre list ig?
 # album_tracks = get_album_tracks_from_id(get_token(), album_id)
+# cover = album["images"][1]["url"]
 
-
-# recommendations = get_recommendations(get_token(), artist_id, artist_genres)["tracks"]
-
-# print(recommendations[0])
-
-# for track in recommendations:
-#     print(track["album"]["name"],"by", track["album"]["artists"][0]["name"])
-
-
+# recommendation = get_recommendations(get_token(), artist_id, artist_genres)["tracks"][0]
+# artist_page = recommendation["artists"][0]["external_urls"]["spotify"]
+# track_page = recommendation["external_urls"]["spotify"]
+# track_name = recommendation["name"]
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
