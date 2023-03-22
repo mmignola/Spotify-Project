@@ -1,10 +1,16 @@
-<h1>Welcome!</h1>
-<h2>Search for an album to discover some of its hidden Spotify stats and get recommendations!</h2>
-    <form action="/results" method="POST">
-        <p>
-            Album Name <input type="text" name="search_term">
-        </p>
-        <p>
-            <input type="submit">
-        </p>
-    </form>
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="homepage">
+    <h1>Welcome!</h1>
+    <h2>Search for an album to discover some of its hidden Spotify stats and get recommendations!</h2>
+        <form action="/results" method="POST">
+            <h3>
+                Album Name <input type="text" name="search_term">
+            </h3>
+            <p>
+                <input type="submit" value="Search">
+            </p>
+        </form>
+</div>
+{% endblock %}

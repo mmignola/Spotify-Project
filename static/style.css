@@ -1,0 +1,78 @@
+body {
+    font-family: Georgia, serif;
+    background-color: #313131;
+    margin: 8%;
+    margin-top: 8%;
+}
+
+p {
+    color: white;
+    font-size: 20px;
+}
+
+h1 {
+    color: white;
+    font-size: 60px;
+    margin-bottom: 5px;
+}
+
+h2 {
+    color: white;
+    font-size: 40px;
+}
+
+.homepage h2 {
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+h3 {
+    color: white;
+    font-size: 22px;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(177, 177, 177)
+}
+
+.homepage {
+    text-align: center;
+    margin-top: 20%;
+}
+
+.album-info {
+    margin-left: 14%;
+}
+
+.float-container {
+    margin-top: 180px;
+    display: flex;
+    justify-content: center;
+}
+
+.float-child {
+    text-align: left;
+    display: inline-block;
+    width: 35%;
+    margin: 1%;
+    border: 10px;
+    height: fit-content;
+}
+img {
+    float: left;
+    margin-right: 30px;
+}
+
+input[type=submit] {
+    border: 0;
+    border-radius: 3px;
+    width: 76px;
+    height: 28px;
+    font-size: 16px;
+    margin-top: 6px;
+}

@@ -1,22 +1,32 @@
-<h1>{{ album["name"] }}</h1>
-<h3>by {{ album["artists"][0]["name"] }}</h3>
-<h3>Released {{ release_date }}</h3>
+{% extends 'base.html' %}
+{% block body %}
 
-<img src={{cover_art}}>
+<div class="album-info">
+    <img src={{cover_art}}>
+    <h1>{{ album["name"] }}</h1>
+    <h3>by {{ album["artists"][0]["name"] }}</h3>
+    <h3>Released {{ release_date }}</h3>    
+</div>    
 
-<h2>Album Stats</h2>
-<p>Genres: {{ genres }}</p>
-<p>Popularity: {{ popularity }} percentile</p>
-<p>Average Danceability: {{ danceability }}%</p>
-<p>Average Energy: {{ energy }}%</p>
+<div class="float-container">
+    <div class="float-child">
+        <h2>Album Stats</h2>
+        <p>Genres: {{ genres }}</p>
+        <p>Popularity: {{ popularity }} percentile</p>
+        <p>Average Danceability: {{ danceability }}%</p>
+        <p>Average Energy: {{ energy }}%</p>    
+    </div>
 
+    <div class="float-child">
+        <h2>You'd Also Like</h2>
+        {% for rec in recommendations %}
+            {% set trackLink = rec["external_urls"]["spotify"] %}
+            {% set artistLink = rec["artists"][0]["external_urls"]["spotify"] %}
+            <p><a href="{{ trackLink }}">{{ rec["name"] }}</a> by <a href="{{ artistLink }}">{{ rec["album"]["artists"][0]["name"] }}</a></p>
+        {% endfor %}    
+    </div>    
+</div>
 
-<h2>You'd Also Like</h2>
-{% for rec in recommendations %}
-    {% set trackLink = rec["external_urls"]["spotify"] %}
-    {% set artistLink = rec["artists"][0]["external_urls"]["spotify"] %}
-    <ul><a href="{{ trackLink }}">{{ rec["name"] }}</a> by <a href="{{ artistLink }}">{{ rec["album"]["artists"][0]["name"] }}</a></ul>
-{% endfor %}
+<p><span style="margin-left: 14%"><a href="/">Back to search</a></span></p>
 
-
-<p><a href="/">Back to search</a></p>
+{% endblock %}
